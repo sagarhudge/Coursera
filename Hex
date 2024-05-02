@@ -1,0 +1,71 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Define the size of the board
+const int BOARD_SIZE = 5;
+
+// Represent the board with a 2D array
+vector<vector<char>> board(BOARD_SIZE, vector<char>(BOARD_SIZE, '-'));
+
+// Function to print the board
+void printBoard() {
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        // Print spaces for indentation
+        for (int j = 0; j < i; ++j) cout << " ";
+        for (int j = 0; j < BOARD_SIZE; ++j) cout << board[i][j] << " ";
+        cout << endl;
+    }
+}
+
+// Function to check if a move is valid
+bool isValidMove(int row, int col) {
+    return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE && board[row][col] == '-';
+}
+
+// Function to check if a player has won
+bool hasWon(char player) {
+    // Implement your winning condition check here
+    return false;
+}
+
+// Function for user input
+void userMove() {
+    int row, col;
+    cout << "Enter row and column (0-indexed) for your move: ";
+    cin >> row >> col;
+    if (isValidMove(row, col)) {
+        board[row][col] = 'X'; // Assuming user is 'X'
+    } else {
+        cout << "Invalid move. Try again." << endl;
+        userMove();
+    }
+}
+
+// Function for AI input (random move for now)
+void aiMove() {
+    int row, col;
+    do {
+        row = rand() % BOARD_SIZE;
+        col = rand() % BOARD_SIZE;
+    } while (!isValidMove(row, col));
+    board[row][col] = 'O'; // Assuming AI is 'O'
+}
+
+int main() {
+    // Main game loop
+    while (true) {
+        printBoard();
+        userMove();
+        if (hasWon('X')) {
+            cout << "Congratulations! You win!" << endl;
+            break;
+        }
+        aiMove();
+        if (hasWon('O')) {
+            cout << "AI wins! Better luck next time." << endl;
+            break;
+        }
+    }
+    return 0;
+}
