@@ -1,71 +1,157 @@
 #include <iostream>
 #include <vector>
+#include <ctime>
+#include <cstdlib>
+#include <limits>
+
 using namespace std;
 
-// Define the size of the board
-const int BOARD_SIZE = 5;
+// Define constants for board size and player colors
+const int BOARD_SIZE = 11;
+const char EMPTY = '.';
+const char BLUE = 'B';
+const char RED = 'R';
 
-// Represent the board with a 2D array
-vector<vector<char>> board(BOARD_SIZE, vector<char>(BOARD_SIZE, '-'));
+// Define the board class
+class Board {
+private:
+    vector<vector<char>> board;
 
-// Function to print the board
-void printBoard() {
-    for (int i = 0; i < BOARD_SIZE; ++i) {
-        // Print spaces for indentation
-        for (int j = 0; j < i; ++j) cout << " ";
-        for (int j = 0; j < BOARD_SIZE; ++j) cout << board[i][j] << " ";
-        cout << endl;
+public:
+    // Constructor to initialize the board
+    Board() : board(BOARD_SIZE, vector<char>(BOARD_SIZE, EMPTY)) {}
+
+    // Function to display the board
+    void display() {
+        for (int i = 0; i < BOARD_SIZE; ++i) {
+            for (int j = 0; j < BOARD_SIZE; ++j) {
+                cout << board[i][j] << " ";
+            }
+            cout << endl;
+        }
     }
-}
 
-// Function to check if a move is valid
-bool isValidMove(int row, int col) {
-    return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE && board[row][col] == '-';
-}
+    // Function to check if a move is valid
+    bool isValidMove(int row, int col) {
+        return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE && board[row][col] == EMPTY;
+    }
 
-// Function to check if a player has won
-bool hasWon(char player) {
-    // Implement your winning condition check here
-    return false;
-}
+    // Function to make a move
+    void makeMove(int row, int col, char player) {
+        board[row][col] = player;
+    }
 
-// Function for user input
-void userMove() {
+    // Function to check if there's a winner
+    bool checkWinner(char player) {
+        // Implement your logic to check for a winner
+        return false;
+    }
+};
+
+// Function to get user input for a move
+pair<int, int> getUserMove() {
     int row, col;
     cout << "Enter row and column (0-indexed) for your move: ";
     cin >> row >> col;
-    if (isValidMove(row, col)) {
-        board[row][col] = 'X'; // Assuming user is 'X'
-    } else {
-        cout << "Invalid move. Try again." << endl;
-        userMove();
-    }
+    return make_pair(row, col);
 }
 
-// Function for AI input (random move for now)
-void aiMove() {
+// Function to generate a random move for the computer player
+pair<int, int> getRandomMove(const Board& board) {
     int row, col;
     do {
         row = rand() % BOARD_SIZE;
         col = rand() % BOARD_SIZE;
-    } while (!isValidMove(row, col));
-    board[row][col] = 'O'; // Assuming AI is 'O'
+    } while (!board.isValidMove(row, col));
+    return make_pair(row, col);
 }
 
-int main() {
+// Function to evaluate a move using Monte Carlo method
+double evaluateMove(const Board& board, int row, int col, char player, int trials) {
+    // Implement your Monte Carlo evaluation logic here
+    double wins = 0.0;
+    for (int i = 0; i < trials; ++i) {
+        // Simulate a random game and count wins
+        // This could involve making random moves until the game is over
+    }
+    return wins / trials;
+}
+
+// Function to find the best move using the min-max algorithm with alpha-beta pruning
+pair<int, int> findBestMove(const Board& board, int depth, char player, double alpha, double beta) {
+    if (depth == 0) {
+        // Return evaluation score for leaf nodes
+        return make_pair(-1, -1);
+    }
+
+    pair<int, int> bestMove = make_pair(-1, -1);
+    double bestScore = -numeric_limits<double>::infinity();
+
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            if (board.isValidMove(i, j)) {
+                // Try the move
+                Board tempBoard = board;
+                tempBoard.makeMove(i, j, player);
+                
+                // Evaluate the move
+                double score = evaluateMove(tempBoard, i, j, player, 1000);
+
+                // Maximize for blue player (computer)
+                if (player == BLUE) {
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestMove = make_pair(i, j);
+                    }
+                    alpha = max(alpha, bestScore);
+                }
+                // Minimize for red player (human)
+                else {
+                    if (score < bestScore) {
+                        bestScore = score;
+                        bestMove = make_pair(i, j);
+                    }
+                    beta = min(beta, bestScore);
+                }
+
+                // Alpha-beta pruning
+                if (beta <= alpha) {
+                    break;
+                }
+            }
+        }
+    }
+
+    return bestMove;
+}
+
+// Function to play the game
+void playGame() {
+    Board board;
+    srand(time(0)); // Seed random number generator
+
     // Main game loop
     while (true) {
-        printBoard();
-        userMove();
-        if (hasWon('X')) {
+        // Human player's turn
+        board.display();
+        pair<int, int> humanMove = getUserMove();
+        board.makeMove(humanMove.first, humanMove.second, BLUE);
+        if (board.checkWinner(BLUE)) {
             cout << "Congratulations! You win!" << endl;
             break;
         }
-        aiMove();
-        if (hasWon('O')) {
-            cout << "AI wins! Better luck next time." << endl;
+
+        // Computer player's turn
+        pair<int, int> computerMove = findBestMove(board, 3, RED, -numeric_limits<double>::infinity(), numeric_limits<double>::infinity());
+        board.makeMove(computerMove.first, computerMove.second, RED);
+        if (board.checkWinner(RED)) {
+            cout << "Sorry, you lose. The computer wins!" << endl;
             break;
         }
     }
+}
+
+int main() {
+    playGame();
     return 0;
 }
