@@ -1,16 +1,12 @@
-npm install react-native-sqlite-storage
-npm install --save-dev @types/react-native-sqlite-storage
-
-
 import SQLite, { SQLiteDatabase, ResultSet } from 'react-native-sqlite-storage';
 
 SQLite.DEBUG(true);
 SQLite.enablePromise(true);
 
-const database_name = "MyDatabase.db";
-const database_version = "1.0";
-const database_displayname = "My SQLite Database";
-const database_size = 200000;
+const databaseConfig = {
+  name: "MyDatabase.db",
+  location: "nosync",
+};
 
 interface Item {
   id?: number;
@@ -20,105 +16,70 @@ interface Item {
 }
 
 class DatabaseService {
-  initDB(): Promise<SQLiteDatabase> {
-    return SQLite.openDatabase(
-      database_name,
-      database_version,
-      database_displayname,
-      database_size
-    );
+  private async initDB(): Promise<SQLiteDatabase> {
+    return SQLite.openDatabase(databaseConfig);
   }
 
-  closeDatabase(db: SQLiteDatabase): void {
-    db.close()
-      .then(() => console.log("Database closed"))
-      .catch(error => console.error(error));
+  private closeDatabase(db: SQLiteDatabase): void {
+    db.close().catch(error => console.error(error));
   }
 
-  createTable(): Promise<void> {
-    return this.initDB().then(db => {
-      return db.transaction(tx => {
-        tx.executeSql(`CREATE TABLE IF NOT EXISTS items (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          name TEXT,
-          description TEXT
-        )`);
-      }).then(() => {
-        this.closeDatabase(db);
-      }).catch(error => console.error(error));
-    });
+  async createTable(): Promise<void> {
+    const db = await this.initDB();
+    await db.executeSql(`
+      CREATE TABLE IF NOT EXISTS items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        description TEXT
+      )
+    `);
+    this.closeDatabase(db);
   }
 
-  addItem(item: Item): Promise<ResultSet> {
-    return this.initDB().then(db => {
-      return db.transaction(tx => {
-        return tx.executeSql('INSERT INTO items (name, description) VALUES (?, ?)', [item.name, item.description]);
-      }).then(([tx, results]) => {
-        this.closeDatabase(db);
-        return results;
-      }).catch(error => console.error(error));
-    });
+  async addItem(item: Item): Promise<ResultSet> {
+    const db = await this.initDB();
+    const result = await db.executeSql('INSERT INTO items (name, description) VALUES (?, ?)', [item.name, item.description]);
+    this.closeDatabase(db);
+    return result[0];
   }
 
-  updateItem(id: number, item: Item): Promise<ResultSet> {
-    return this.initDB().then(db => {
-      return db.transaction(tx => {
-        return tx.executeSql('UPDATE items SET name = ?, description = ? WHERE id = ?', [item.name, item.description, id]);
-      }).then(([tx, results]) => {
-        this.closeDatabase(db);
-        return results;
-      }).catch(error => console.error(error));
-    });
+  async updateItem(id: number, item: Item): Promise<ResultSet> {
+    const db = await this.initDB();
+    const result = await db.executeSql('UPDATE items SET name = ?, description = ? WHERE id = ?', [item.name, item.description, id]);
+    this.closeDatabase(db);
+    return result[0];
   }
 
-  deleteItem(id: number): Promise<ResultSet> {
-    return this.initDB().then(db => {
-      return db.transaction(tx => {
-        return tx.executeSql('DELETE FROM items WHERE id = ?', [id]);
-      }).then(([tx, results]) => {
-        this.closeDatabase(db);
-        return results;
-      }).catch(error => console.error(error));
-    });
+  async deleteItem(id: number): Promise<ResultSet> {
+    const db = await this.initDB();
+    const result = await db.executeSql('DELETE FROM items WHERE id = ?', [id]);
+    this.closeDatabase(db);
+    return result[0];
   }
 
-  getItems(): Promise<Item[]> {
-    return this.initDB().then(db => {
-      return db.transaction(tx => {
-        return tx.executeSql('SELECT * FROM items', []);
-      }).then(([tx, results]) => {
-        let len = results.rows.length;
-        let items: Item[] = [];
-        for (let i = 0; i < len; i++) {
-          let row = results.rows.item(i);
-          items.push(row);
-        }
-        this.closeDatabase(db);
-        return items;
-      }).catch(error => console.error(error));
-    });
+  async getItems(): Promise<Item[]> {
+    const db = await this.initDB();
+    const [result] = await db.executeSql('SELECT * FROM items', []);
+    this.closeDatabase(db);
+    
+    const items: Item[] = [];
+    for (let i = 0; i < result.rows.length; i++) {
+      items.push(result.rows.item(i));
+    }
+    return items;
   }
 
-  updateDatabaseVersion(newVersion: number): Promise<void> {
-    return SQLite.openDatabase(
-      database_name,
-      database_version,
-      database_displayname,
-      database_size
-    ).then(db => {
-      return db.transaction(tx => {
-        return tx.executeSql(`PRAGMA user_version`).then(([tx, results]) => {
-          let currentVersion = results.rows.item(0).user_version;
-          if (currentVersion < newVersion) {
-            // Execute alter table statements here based on version
-            tx.executeSql('ALTER TABLE items ADD COLUMN new_column TEXT');
-            tx.executeSql(`PRAGMA user_version = ${newVersion}`);
-          }
-        });
-      }).then(() => {
-        this.closeDatabase(db);
-      }).catch(error => console.error(error));
-    });
+  async updateDatabaseVersion(newVersion: number): Promise<void> {
+    const db = await this.initDB();
+    const [result] = await db.executeSql('PRAGMA user_version');
+    const currentVersion = result.rows.item(0).user_version;
+
+    if (currentVersion < newVersion) {
+      await db.executeSql('ALTER TABLE items ADD COLUMN new_column TEXT');
+      await db.executeSql(`PRAGMA user_version = ${newVersion}`);
+    }
+
+    this.closeDatabase(db);
   }
 }
 
@@ -140,41 +101,39 @@ const App: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
 
   useEffect(() => {
-    DatabaseService.createTable();
-    DatabaseService.updateDatabaseVersion(2);
-    fetchItems();
+    (async () => {
+      await DatabaseService.createTable();
+      await DatabaseService.updateDatabaseVersion(2);
+      await fetchItems();
+    })();
   }, []);
 
-  const fetchItems = () => {
-    DatabaseService.getItems().then((data) => {
-      setItems(data);
-    });
+  const fetchItems = async () => {
+    const data = await DatabaseService.getItems();
+    setItems(data);
   };
 
-  const addItem = () => {
+  const addItem = async () => {
     const newItem: Item = { name: 'New Item', description: 'Item Description' };
-    DatabaseService.addItem(newItem).then(() => {
-      fetchItems();
-    });
+    await DatabaseService.addItem(newItem);
+    await fetchItems();
   };
 
-  const updateItem = (id: number) => {
+  const updateItem = async (id: number) => {
     const updatedItem: Item = { name: 'Updated Item', description: 'Updated Description' };
-    DatabaseService.updateItem(id, updatedItem).then(() => {
-      fetchItems();
-    });
+    await DatabaseService.updateItem(id, updatedItem);
+    await fetchItems();
   };
 
-  const deleteItem = (id: number) => {
-    DatabaseService.deleteItem(id).then(() => {
-      fetchItems();
-    });
+  const deleteItem = async (id: number) => {
+    await DatabaseService.deleteItem(id);
+    await fetchItems();
   };
 
   return (
     <View>
       <Button title="Add Item" onPress={addItem} />
-      {items.map((item) => (
+      {items.map(item => (
         <View key={item.id}>
           <Text>{item.name}</Text>
           <Text>{item.description}</Text>
