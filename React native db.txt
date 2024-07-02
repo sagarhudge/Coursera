@@ -1,3 +1,4 @@
+
 import SQLite, { SQLiteDatabase, ResultSet } from 'react-native-sqlite-storage';
 
 SQLite.DEBUG(true);
@@ -16,15 +17,27 @@ interface Item {
 }
 
 class DatabaseService {
+  private readOnly: boolean = false;
+
   private async initDB(): Promise<SQLiteDatabase> {
-    return SQLite.openDatabase(databaseConfig);
+    try {
+      return await SQLite.openDatabase(databaseConfig);
+    } catch (error) {
+      console.error('Failed to open database:', error);
+      throw error;
+    }
   }
 
   private closeDatabase(db: SQLiteDatabase): void {
-    db.close().catch(error => console.error(error));
+    db.close().catch(error => console.error('Failed to close database:', error));
+  }
+
+  setReadOnlyMode(isReadOnly: boolean): void {
+    this.readOnly = isReadOnly;
   }
 
   async createTable(): Promise<void> {
+    if (this.readOnly) throw new Error("Database is in read-only mode");
     const db = await this.initDB();
     await db.executeSql(`
       CREATE TABLE IF NOT EXISTS items (
@@ -37,6 +50,7 @@ class DatabaseService {
   }
 
   async addItem(item: Item): Promise<ResultSet> {
+    if (this.readOnly) throw new Error("Database is in read-only mode");
     const db = await this.initDB();
     const result = await db.executeSql('INSERT INTO items (name, description) VALUES (?, ?)', [item.name, item.description]);
     this.closeDatabase(db);
@@ -44,107 +58,7 @@ class DatabaseService {
   }
 
   async updateItem(id: number, item: Item): Promise<ResultSet> {
+    if (this.readOnly) throw new Error("Database is in read-only mode");
     const db = await this.initDB();
     const result = await db.executeSql('UPDATE items SET name = ?, description = ? WHERE id = ?', [item.name, item.description, id]);
     this.closeDatabase(db);
-    return result[0];
-  }
-
-  async deleteItem(id: number): Promise<ResultSet> {
-    const db = await this.initDB();
-    const result = await db.executeSql('DELETE FROM items WHERE id = ?', [id]);
-    this.closeDatabase(db);
-    return result[0];
-  }
-
-  async getItems(): Promise<Item[]> {
-    const db = await this.initDB();
-    const [result] = await db.executeSql('SELECT * FROM items', []);
-    this.closeDatabase(db);
-    
-    const items: Item[] = [];
-    for (let i = 0; i < result.rows.length; i++) {
-      items.push(result.rows.item(i));
-    }
-    return items;
-  }
-
-  async updateDatabaseVersion(newVersion: number): Promise<void> {
-    const db = await this.initDB();
-    const [result] = await db.executeSql('PRAGMA user_version');
-    const currentVersion = result.rows.item(0).user_version;
-
-    if (currentVersion < newVersion) {
-      await db.executeSql('ALTER TABLE items ADD COLUMN new_column TEXT');
-      await db.executeSql(`PRAGMA user_version = ${newVersion}`);
-    }
-
-    this.closeDatabase(db);
-  }
-}
-
-export default new DatabaseService();
-
-
-import React, { useEffect, useState } from 'react';
-import { View, Text, Button } from 'react-native';
-import DatabaseService from './DatabaseService';
-
-interface Item {
-  id: number;
-  name: string;
-  description: string;
-  new_column?: string;
-}
-
-const App: React.FC = () => {
-  const [items, setItems] = useState<Item[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      await DatabaseService.createTable();
-      await DatabaseService.updateDatabaseVersion(2);
-      await fetchItems();
-    })();
-  }, []);
-
-  const fetchItems = async () => {
-    const data = await DatabaseService.getItems();
-    setItems(data);
-  };
-
-  const addItem = async () => {
-    const newItem: Item = { name: 'New Item', description: 'Item Description' };
-    await DatabaseService.addItem(newItem);
-    await fetchItems();
-  };
-
-  const updateItem = async (id: number) => {
-    const updatedItem: Item = { name: 'Updated Item', description: 'Updated Description' };
-    await DatabaseService.updateItem(id, updatedItem);
-    await fetchItems();
-  };
-
-  const deleteItem = async (id: number) => {
-    await DatabaseService.deleteItem(id);
-    await fetchItems();
-  };
-
-  return (
-    <View>
-      <Button title="Add Item" onPress={addItem} />
-      {items.map(item => (
-        <View key={item.id}>
-          <Text>{item.name}</Text>
-          <Text>{item.description}</Text>
-          <Button title="Update" onPress={() => updateItem(item.id)} />
-          <Button title="Delete" onPress={() => deleteItem(item.id)} />
-        </View>
-      ))}
-    </View>
-  );
-};
-
-export default App;
-
-
