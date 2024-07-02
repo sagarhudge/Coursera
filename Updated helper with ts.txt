@@ -1,0 +1,86 @@
+import SQLite, { SQLiteDatabase, ResultSet } from 'react-native-sqlite-storage';
+
+SQLite.DEBUG(true);
+SQLite.enablePromise(true);
+
+const databaseConfig = {
+  name: "MyDatabase.db",
+  location: "default",
+};
+
+interface Item {
+  id?: number;
+  name: string;
+  description: string;
+  new_column?: string;
+}
+
+class DatabaseService {
+  private async initDB(): Promise<SQLiteDatabase> {
+    return SQLite.openDatabase(databaseConfig);
+  }
+
+  private closeDatabase(db: SQLiteDatabase): void {
+    db.close().catch(error => console.error(error));
+  }
+
+  async createTable(): Promise<void> {
+    const db = await this.initDB();
+    await db.executeSql(`
+      CREATE TABLE IF NOT EXISTS items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        description TEXT
+      )
+    `);
+    this.closeDatabase(db);
+  }
+
+  async addItem(item: Item): Promise<ResultSet> {
+    const db = await this.initDB();
+    const result = await db.executeSql('INSERT INTO items (name, description) VALUES (?, ?)', [item.name, item.description]);
+    this.closeDatabase(db);
+    return result[0];
+  }
+
+  async updateItem(id: number, item: Item): Promise<ResultSet> {
+    const db = await this.initDB();
+    const result = await db.executeSql('UPDATE items SET name = ?, description = ? WHERE id = ?', [item.name, item.description, id]);
+    this.closeDatabase(db);
+    return result[0];
+  }
+
+  async deleteItem(id: number): Promise<ResultSet> {
+    const db = await this.initDB();
+    const result = await db.executeSql('DELETE FROM items WHERE id = ?', [id]);
+    this.closeDatabase(db);
+    return result[0];
+  }
+
+  async getItems(): Promise<Item[]> {
+    const db = await this.initDB();
+    const [result] = await db.executeSql('SELECT * FROM items', []);
+    this.closeDatabase(db);
+    
+    const items: Item[] = [];
+    for (let i = 0; i < result.rows.length; i++) {
+      items.push(result.rows.item(i));
+    }
+    return items;
+  }
+
+  async updateDatabaseVersion(newVersion: number): Promise<void> {
+    const db = await this.initDB();
+    const [result] = await db.executeSql('PRAGMA user_version');
+    const currentVersion = result.rows.item(0).user_version;
+
+    if (currentVersion < newVersion) {
+      await db.executeSql('ALTER TABLE items ADD COLUMN new_column TEXT');
+      await db.executeSql(`PRAGMA user_version = ${newVersion}`);
+    }
+
+    this.closeDatabase(db);
+  }
+}
+
+export default new DatabaseService();
