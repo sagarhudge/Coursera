@@ -1,0 +1,312 @@
+schema.ts
+// schemas.ts
+
+import Realm from 'realm';
+
+// Define Item schema
+class ItemSchema extends Realm.Object {
+  id!: number;
+  name!: string;
+  quantity!: number;
+
+  static schema = {
+    name: 'Item',
+    primaryKey: 'id',
+    properties: {
+      id: 'int',
+      name: 'string',
+      quantity: 'int',
+    },
+  };
+}
+
+// Define User schema
+class UserSchema extends Realm.Object {
+  userId!: number;
+  username!: string;
+  email!: string;
+
+  static schema = {
+    name: 'User',
+    primaryKey: 'userId',
+    properties: {
+      userId: 'int',
+      username: 'string',
+      email: 'string',
+    },
+  };
+}
+
+export { ItemSchema, UserSchema };
+
+
+
+
+// realmConfig.ts
+
+import Realm from 'realm';
+import { ItemSchema, UserSchema } from './schemas';
+
+// Export the Realm instance with multiple schemas
+const realm = new Realm({ schema: [ItemSchema, UserSchema] });
+
+export default realm;
+
+
+
+// realmHelper.ts
+
+import realm from './realmConfig';
+import { ItemSchema, UserSchema } from './schemas';
+
+// Define types for Item and User
+interface Item {
+  id: number;
+  name: string;
+  quantity: number;
+}
+
+interface User {
+  userId: number;
+  username: string;
+  email: string;
+}
+
+class RealmHelper {
+  private realm: Realm;
+
+  constructor() {
+    this.realm = realm;
+  }
+
+  // Item operations
+
+  createItem(item: Item) {
+    try {
+      this.realm.write(() => {
+        this.realm.create('Item', item);
+      });
+    } catch (error) {
+      console.error('Error creating item:', error);
+    }
+  }
+
+  getAllItems(): Realm.Results<Item & Realm.Object> {
+    try {
+      return this.realm.objects<Item>('Item');
+    } catch (error) {
+      console.error('Error fetching items:', error);
+      return [] as any;
+    }
+  }
+
+  getItemById(id: number): Item | null {
+    try {
+      return this.realm.objectForPrimaryKey<Item>('Item', id);
+    } catch (error) {
+      console.error('Error fetching item:', error);
+      return null;
+    }
+  }
+
+  updateItem(updatedItem: Item) {
+    try {
+      this.realm.write(() => {
+        this.realm.create('Item', updatedItem, Realm.UpdateMode.Modified);
+      });
+    } catch (error) {
+      console.error('Error updating item:', error);
+    }
+  }
+
+  deleteItemById(id: number) {
+    try {
+      this.realm.write(() => {
+        const itemToDelete = this.realm.objectForPrimaryKey<Item>('Item', id);
+        if (itemToDelete) {
+          this.realm.delete(itemToDelete);
+        }
+      });
+    } catch (error) {
+      console.error('Error deleting item:', error);
+    }
+  }
+
+  deleteAllItems() {
+    try {
+      this.realm.write(() => {
+        this.realm.delete(this.realm.objects('Item'));
+      });
+    } catch (error) {
+      console.error('Error deleting all items:', error);
+    }
+  }
+
+  // User operations
+
+  createUser(user: User) {
+    try {
+      this.realm.write(() => {
+        this.realm.create('User', user);
+      });
+    } catch (error) {
+      console.error('Error creating user:', error);
+    }
+  }
+
+  getAllUsers(): Realm.Results<User & Realm.Object> {
+    try {
+      return this.realm.objects<User>('User');
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      return [] as any;
+    }
+  }
+
+  getUserById(userId: number): User | null {
+    try {
+      return this.realm.objectForPrimaryKey<User>('User', userId);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      return null;
+    }
+  }
+
+  updateUser(updatedUser: User) {
+    try {
+      this.realm.write(() => {
+        this.realm.create('User', updatedUser, Realm.UpdateMode.Modified);
+      });
+    } catch (error) {
+      console.error('Error updating user:', error);
+    }
+  }
+
+  deleteUserById(userId: number) {
+    try {
+      this.realm.write(() => {
+        const userToDelete = this.realm.objectForPrimaryKey<User>('User', userId);
+        if (userToDelete) {
+          this.realm.delete(userToDelete);
+        }
+      });
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  }
+
+  deleteAllUsers() {
+    try {
+      this.realm.write(() => {
+        this.realm.delete(this.realm.objects('User'));
+      });
+    } catch (error) {
+      console.error('Error deleting all users:', error);
+    }
+  }
+
+  // Close the Realm instance
+  close() {
+    try {
+      if (!this.realm.isClosed) {
+        this.realm.close();
+      }
+    } catch (error) {
+      console.error('Error closing Realm:', error);
+    }
+  }
+}
+
+export default new RealmHelper();
+
+
+
+
+// App.tsx
+
+import React, { useEffect, useState } from 'react';
+import { View, Text, Button, FlatList } from 'react-native';
+import RealmHelper from './realmHelper';
+import { Item, User } from './realmHelper';
+
+const App: React.FC = () => {
+  const [items, setItems] = useState<Realm.Results<Item & Realm.Object>>([] as any);
+  const [users, setUsers] = useState<Realm.Results<User & Realm.Object>>([] as any);
+
+  useEffect(() => {
+    // Fetch all items and users when the component mounts
+    const allItems = RealmHelper.getAllItems();
+    const allUsers = RealmHelper.getAllUsers();
+    setItems(allItems);
+    setUsers(allUsers);
+
+    // Cleanup
+    return () => {
+      RealmHelper.close();
+    };
+  }, []);
+
+  const addItem = () => {
+    const newItem: Item = {
+      id: Date.now(),
+      name: 'New Item',
+      quantity: 1,
+    };
+    RealmHelper.createItem(newItem);
+    setItems(RealmHelper.getAllItems());
+  };
+
+  const addUser = () => {
+    const newUser: User = {
+      userId: Date.now(),
+      username: 'New User',
+      email: 'user@example.com',
+    };
+    RealmHelper.createUser(newUser);
+    setUsers(RealmHelper.getAllUsers());
+  };
+
+  const deleteItem = (id: number) => {
+    RealmHelper.deleteItemById(id);
+    setItems(RealmHelper.getAllItems());
+  };
+
+  const deleteUser = (userId: number) => {
+    RealmHelper.deleteUserById(userId);
+    setUsers(RealmHelper.getAllUsers());
+  };
+
+  return (
+    <View>
+      <Button title="Add Item" onPress={addItem} />
+      <Button title="Add User" onPress={addUser} />
+
+      <Text>Items:</Text>
+      <FlatList
+        data={items}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <View>
+            <Text>{item.name} - {item.quantity}</Text>
+            <Button title="Delete" onPress={() => deleteItem(item.id)} />
+          </View>
+        )}
+      />
+
+      <Text>Users:</Text>
+      <FlatList
+        data={users}
+        keyExtractor={(user) => user.userId.toString()}
+        renderItem={({ user }) => (
+          <View>
+            <Text>{user.username} - {user.email}</Text>
+            <Button title="Delete" onPress={() => deleteUser(user.userId)} />
+          </View>
+        )}
+      />
+    </View>
+  );
+};
+
+export default App;
+
