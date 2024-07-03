@@ -1,9 +1,9 @@
-schema.ts
+
+
 // schemas.ts
 
 import Realm from 'realm';
 
-// Define Item schema
 class ItemSchema extends Realm.Object {
   id!: number;
   name!: string;
@@ -20,7 +20,6 @@ class ItemSchema extends Realm.Object {
   };
 }
 
-// Define User schema
 class UserSchema extends Realm.Object {
   userId!: number;
   username!: string;
@@ -47,11 +46,9 @@ export { ItemSchema, UserSchema };
 import Realm from 'realm';
 import { ItemSchema, UserSchema } from './schemas';
 
-// Export the Realm instance with multiple schemas
 const realm = new Realm({ schema: [ItemSchema, UserSchema] });
 
 export default realm;
-
 
 
 // realmHelper.ts
@@ -59,7 +56,6 @@ export default realm;
 import realm from './realmConfig';
 import { ItemSchema, UserSchema } from './schemas';
 
-// Define types for Item and User
 interface Item {
   id: number;
   name: string;
@@ -84,19 +80,19 @@ class RealmHelper {
   createItem(item: Item) {
     try {
       this.realm.write(() => {
-        this.realm.create('Item', item);
+        this.realm.create<Item>('Item', item);
       });
     } catch (error) {
       console.error('Error creating item:', error);
     }
   }
 
-  getAllItems(): Realm.Results<Item & Realm.Object> {
+  getAllItems(): Realm.Results<Item> {
     try {
       return this.realm.objects<Item>('Item');
     } catch (error) {
       console.error('Error fetching items:', error);
-      return [] as any;
+      return [] as unknown as Realm.Results<Item>;
     }
   }
 
@@ -112,7 +108,7 @@ class RealmHelper {
   updateItem(updatedItem: Item) {
     try {
       this.realm.write(() => {
-        this.realm.create('Item', updatedItem, Realm.UpdateMode.Modified);
+        this.realm.create<Item>('Item', updatedItem, Realm.UpdateMode.Modified);
       });
     } catch (error) {
       console.error('Error updating item:', error);
@@ -135,7 +131,7 @@ class RealmHelper {
   deleteAllItems() {
     try {
       this.realm.write(() => {
-        this.realm.delete(this.realm.objects('Item'));
+        this.realm.delete(this.realm.objects<Item>('Item'));
       });
     } catch (error) {
       console.error('Error deleting all items:', error);
@@ -147,19 +143,19 @@ class RealmHelper {
   createUser(user: User) {
     try {
       this.realm.write(() => {
-        this.realm.create('User', user);
+        this.realm.create<User>('User', user);
       });
     } catch (error) {
       console.error('Error creating user:', error);
     }
   }
 
-  getAllUsers(): Realm.Results<User & Realm.Object> {
+  getAllUsers(): Realm.Results<User> {
     try {
       return this.realm.objects<User>('User');
     } catch (error) {
       console.error('Error fetching users:', error);
-      return [] as any;
+      return [] as unknown as Realm.Results<User>;
     }
   }
 
@@ -175,7 +171,7 @@ class RealmHelper {
   updateUser(updatedUser: User) {
     try {
       this.realm.write(() => {
-        this.realm.create('User', updatedUser, Realm.UpdateMode.Modified);
+        this.realm.create<User>('User', updatedUser, Realm.UpdateMode.Modified);
       });
     } catch (error) {
       console.error('Error updating user:', error);
@@ -198,7 +194,7 @@ class RealmHelper {
   deleteAllUsers() {
     try {
       this.realm.write(() => {
-        this.realm.delete(this.realm.objects('User'));
+        this.realm.delete(this.realm.objects<User>('User'));
       });
     } catch (error) {
       console.error('Error deleting all users:', error);
@@ -222,12 +218,24 @@ export default new RealmHelper();
 
 
 
+
 // App.tsx
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, FlatList } from 'react-native';
+import { View, Text, Button, FlatList, ListRenderItem } from 'react-native';
 import RealmHelper from './realmHelper';
-import { Item, User } from './realmHelper';
+
+interface Item {
+  id: number;
+  name: string;
+  quantity: number;
+}
+
+interface User {
+  userId: number;
+  username: string;
+  email: string;
+}
 
 const App: React.FC = () => {
   const [items, setItems] = useState<Realm.Results<Item & Realm.Object>>([] as any);
@@ -276,6 +284,20 @@ const App: React.FC = () => {
     setUsers(RealmHelper.getAllUsers());
   };
 
+  const renderItem: ListRenderItem<Item & Realm.Object> = ({ item }) => (
+    <View>
+      <Text>{item.name} - {item.quantity}</Text>
+      <Button title="Delete" onPress={() => deleteItem(item.id)} />
+    </View>
+  );
+
+  const renderUser: ListRenderItem<User & Realm.Object> = ({ item }) => (
+    <View>
+      <Text>{item.username} - {item.email}</Text>
+      <Button title="Delete" onPress={() => deleteUser(item.userId)} />
+    </View>
+  );
+
   return (
     <View>
       <Button title="Add Item" onPress={addItem} />
@@ -285,28 +307,19 @@ const App: React.FC = () => {
       <FlatList
         data={items}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View>
-            <Text>{item.name} - {item.quantity}</Text>
-            <Button title="Delete" onPress={() => deleteItem(item.id)} />
-          </View>
-        )}
+        renderItem={renderItem}
       />
 
       <Text>Users:</Text>
       <FlatList
         data={users}
-        keyExtractor={(user) => user.userId.toString()}
-        renderItem={({ user }) => (
-          <View>
-            <Text>{user.username} - {user.email}</Text>
-            <Button title="Delete" onPress={() => deleteUser(user.userId)} />
-          </View>
-        )}
+        keyExtractor={(item) => item.userId.toString()}
+        renderItem={renderUser}
       />
     </View>
   );
 };
 
 export default App;
+
 
