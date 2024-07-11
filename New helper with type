@@ -1,0 +1,58 @@
+// RealmDatabase.ts
+import Realm, { ObjectClass, ObjectSchema } from 'realm';
+import realmConfig from './realmConfig';
+
+class RealmDatabase {
+  private static instance: RealmDatabase;
+  private realm: Realm;
+
+  private constructor() {
+    this.realm = new Realm(realmConfig);
+  }
+
+  public static getInstance(): RealmDatabase {
+    if (!RealmDatabase.instance) {
+      RealmDatabase.instance = new RealmDatabase();
+    }
+    return RealmDatabase.instance;
+  }
+
+  public createObject<T extends Realm.Object>(schemaName: string, data: Partial<T>): void {
+    this.realm.write(() => {
+      this.realm.create(schemaName, data);
+    });
+  }
+
+  public getObject<T extends Realm.Object>(schemaName: string, primaryKey: string): T | undefined {
+    const result = this.realm.objectForPrimaryKey<T>(schemaName, primaryKey);
+    return result ? JSON.parse(JSON.stringify(result)) : undefined; // Deep clone to convert Realm.Object to plain object
+  }
+
+  public getAllObjects<T extends Realm.Object>(schemaName: string): T[] {
+    const results = this.realm.objects<T>(schemaName);
+    return results.map(result => JSON.parse(JSON.stringify(result))); // Deep clone to convert Realm.Object to plain object
+  }
+
+  public updateObject<T extends Realm.Object>(schemaName: string, data: Partial<T>): void {
+    this.realm.write(() => {
+      this.realm.create(schemaName, data, Realm.UpdateMode.Modified);
+    });
+  }
+
+  public deleteObject(schemaName: string, primaryKey: string): void {
+    this.realm.write(() => {
+      const objectToDelete = this.realm.objectForPrimaryKey(schemaName, primaryKey);
+      if (objectToDelete) {
+        this.realm.delete(objectToDelete);
+      }
+    });
+  }
+
+  public close(): void {
+    if (!this.realm.isClosed) {
+      this.realm.close();
+    }
+  }
+}
+
+export default RealmDatabase;
