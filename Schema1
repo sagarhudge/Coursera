@@ -1,0 +1,141 @@
+const ArcAnalysisSchema = {
+  name: 'ArcAnalysis',
+  properties: {
+    id: 'string',
+    documentversion: 'string?',
+    organizationId: 'string',
+    locationId: 'string',
+    siteId: 'string?',
+    jobId: 'string',
+    arcopertiontype: 'string',
+    status: 'string',
+    startapptimestamp: 'int',
+    endapptimestamp: 'int',
+    createdby: 'string',
+    createdwhen: 'date',
+    modifiedby: 'string',
+    modifiedwhen: 'date',
+    equipmentinfo: 'EquipmentInfo',
+    ppecategoryresult: 'string?',
+    arccalcresult: 'ArcCalcResult',
+    isdeleted: 'bool',
+    message: 'string',
+    sasToken: 'string',
+  },
+};
+
+const EquipmentInfoSchema = {
+  name: 'EquipmentInfo',
+  properties: {
+    Id: 'string',
+    name: 'string',
+    description: 'string?',
+    location: 'string',
+    equipmentdetails: 'EquipmentDetails',
+  },
+};
+
+const EquipmentDetailsSchema = {
+  name: 'EquipmentDetails',
+  properties: {
+    systemtype: 'string',
+    type: 'string',
+    systemratedvolt: 'float',
+    systemratedvolt_unit: 'string',
+    faultcurrent: 'float',
+    faultcurrent_unit: 'string',
+    faultclearingtime: 'float',
+    faultclearingtime_unit: 'string',
+    measurementtype: 'string',
+    workingdistance: 'float',
+    workingdistance_unit: 'string',
+    arcduration: 'float',
+    arcduration_unit: 'string',
+    enclosurewidth: 'float',
+    enclosurewidth_unit: 'string',
+    enclosureheight: 'float',
+    enclosureheight_unit: 'string',
+    enclosuredepth: 'float',
+    enclosuredepth_unit: 'string',
+    electrodeconfiguration: 'string',
+    electrodegap: 'float',
+    electrodegap_unit: 'string',
+    isratedlessthan200: 'bool?',
+  },
+};
+
+const ArcCalcResultSchema = {
+  name: 'ArcCalcResult',
+  properties: {
+    cf: 'float',
+    normal_arccurrentresult: 'ArcCurrentResult',
+    reduce_arccurrentresult: 'ArcCurrentResult',
+  },
+};
+
+const ArcCurrentResultSchema = {
+  name: 'ArcCurrentResult',
+  properties: {
+    intemidate_arccurrresultvalues: 'ArcCurrResultValues',
+    intemidate_incidentenergyresultvalues: 'IncidentEnergyResultValues',
+    intermidate_arcflashboundaryresultvalues: 'ArcFlashBoundaryResultValues',
+    arc_current: 'string',
+    ppecategorystd: 'string?',
+    arc_flashboundary: 'string',
+    arc_incidentenergy: 'string',
+    arc_time: 'string',
+    ppebylocation: 'PpeByLocation',
+  },
+};
+
+const ArcCurrResultValuesSchema = {
+  name: 'ArcCurrResultValues',
+  properties: {
+    iarc: 'string',
+    iarc_14300: 'string',
+    iarc_2700: 'string?',
+    iarc_600: 'string?',
+    correctionfactor: 'string?',
+  },
+};
+
+const IncidentEnergyResultValuesSchema = {
+  name: 'IncidentEnergyResultValues',
+  properties: {
+    i_energy: 'string?',
+    i_e14300: 'string?',
+    I_e2700: 'string?',
+    i_e600: 'string?',
+  },
+};
+
+const ArcFlashBoundaryResultValuesSchema = {
+  name: 'ArcFlashBoundaryResultValues',
+  properties: {
+    afb: 'string',
+    afb_14300: 'string',
+    iarc_2700: 'string?',
+    iarc_600: 'string?',
+  },
+};
+
+const PpeByLocationSchema = {
+  name: 'PpeByLocation',
+  properties: {
+    ppecategory: 'string?',
+    incidentenergyrange: 'string',
+    clothings: 'string',
+  },
+};
+
+export default {
+  ArcAnalysisSchema,
+  EquipmentInfoSchema,
+  EquipmentDetailsSchema,
+  ArcCalcResultSchema,
+  ArcCurrentResultSchema,
+  ArcCurrResultValuesSchema,
+  IncidentEnergyResultValuesSchema,
+  ArcFlashBoundaryResultValuesSchema,
+  PpeByLocationSchema,
+};
