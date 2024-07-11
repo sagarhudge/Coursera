@@ -1,0 +1,58 @@
+// realmHelper.ts
+import Realm from 'realm';
+import realmConfig from './realmConfig';
+
+export const createObject = async <T>(schemaName: string, data: T): Promise<void> => {
+  const realm = await Realm.open(realmConfig);
+
+  realm.write(() => {
+    realm.create(schemaName, data);
+  });
+
+  realm.close();
+};
+
+export const getObject = async <T>(schemaName: string, primaryKey: string): Promise<T | undefined> => {
+  const realm = await Realm.open(realmConfig);
+  const result = realm.objectForPrimaryKey<T>(schemaName, primaryKey);
+
+  const data = result ? JSON.parse(JSON.stringify(result)) : undefined; // Deep clone to convert Realm.Object to plain object
+
+  realm.close();
+
+  return data;
+};
+
+export const getAllObjects = async <T>(schemaName: string): Promise<T[]> => {
+  const realm = await Realm.open(realmConfig);
+  const results = realm.objects<T>(schemaName);
+
+  const data = results.map(result => JSON.parse(JSON.stringify(result))); // Deep clone to convert Realm.Object to plain object
+
+  realm.close();
+
+  return data;
+};
+
+export const updateObject = async <T>(schemaName: string, data: T): Promise<void> => {
+  const realm = await Realm.open(realmConfig);
+
+  realm.write(() => {
+    realm.create(schemaName, data, Realm.UpdateMode.Modified);
+  });
+
+  realm.close();
+};
+
+export const deleteObject = async (schemaName: string, primaryKey: string): Promise<void> => {
+  const realm = await Realm.open(realmConfig);
+
+  realm.write(() => {
+    const objectToDelete = realm.objectForPrimaryKey(schemaName, primaryKey);
+    if (objectToDelete) {
+      realm.delete(objectToDelete);
+    }
+  });
+
+  realm.close();
+};
