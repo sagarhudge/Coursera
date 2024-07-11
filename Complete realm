@@ -1,0 +1,291 @@
+npm install realm
+npm install @types/realm --save-dev
+
+
+// interfaces.ts
+export interface ArcCurrResultValues {
+  iarc: string;
+  iarc_14300: string;
+  iarc_2700?: string;
+  iarc_600?: string;
+  correctionfactor?: string;
+}
+
+export interface IncidentEnergyResultValues {
+  i_energy?: string;
+  i_e14300?: string;
+  I_e2700?: string;
+  i_e600?: string;
+}
+
+export interface ArcFlashBoundaryResultValues {
+  afb: string;
+  afb_14300: string;
+  iarc_2700?: string;
+  iarc_600?: string;
+}
+
+export interface PpeByLocation {
+  ppecategory?: string;
+  incidentenergyrange: string;
+  clothings: string;
+}
+
+export interface ArcCurrentResult {
+  intemidate_arccurrresultvalues: ArcCurrResultValues;
+  intemidate_incidentenergyresultvalues: IncidentEnergyResultValues;
+  intermidate_arcflashboundaryresultvalues: ArcFlashBoundaryResultValues;
+  arc_current: string;
+  ppecategorystd?: string;
+  arc_flashboundary: string;
+  arc_incidentenergy: string;
+  arc_time: string;
+  ppebylocation: PpeByLocation;
+}
+
+export interface ArcCalcResult {
+  cf: number;
+  normal_arccurrentresult: ArcCurrentResult;
+  reduce_arccurrentresult: ArcCurrentResult;
+}
+
+export interface EquipmentDetails {
+  systemtype: string;
+  type: string;
+  systemratedvolt: number;
+  systemratedvolt_unit: string;
+  faultcurrent: number;
+  faultcurrent_unit: string;
+  faultclearingtime: number;
+  faultclearingtime_unit: string;
+  measurementtype: string;
+  workingdistance: number;
+  workingdistance_unit: string;
+  arcduration: number;
+  arcduration_unit: string;
+  enclosurewidth: number;
+  enclosurewidth_unit: string;
+  enclosureheight: number;
+  enclosureheight_unit: string;
+  enclosuredepth: number;
+  enclosuredepth_unit: string;
+  electrodeconfiguration: string;
+  electrodegap: number;
+  electrodegap_unit: string;
+  isratedlessthan200?: boolean;
+}
+
+export interface EquipmentInfo {
+  Id: string;
+  name: string;
+  description?: string;
+  location: string;
+  equipmentdetails: EquipmentDetails;
+}
+
+export interface ArcAnalysis {
+  id: string;
+  documentversion?: string;
+  organizationId: string;
+  locationId: string;
+  siteId?: string;
+  jobId: string;
+  arcopertiontype: string;
+  status: string;
+  startapptimestamp: number;
+  endapptimestamp: number;
+  createdby: string;
+  createdwhen: Date;
+  modifiedby: string;
+  modifiedwhen: Date;
+  equipmentinfo: EquipmentInfo;
+  ppecategoryresult?: string;
+  arccalcresult: ArcCalcResult;
+  isdeleted: boolean;
+  message: string;
+  sasToken: string;
+}
+
+
+// realmConfig.ts
+import Realm from 'realm';
+import { ArcAnalysis, EquipmentInfo, EquipmentDetails, ArcCalcResult, ArcCurrentResult, ArcCurrResultValues, IncidentEnergyResultValues, ArcFlashBoundaryResultValues, PpeByLocation } from './interfaces';
+
+const ArcCurrResultValuesSchema: Realm.ObjectSchema = {
+  name: 'ArcCurrResultValues',
+  properties: {
+    iarc: 'string',
+    iarc_14300: 'string',
+    iarc_2700: 'string?',
+    iarc_600: 'string?',
+    correctionfactor: 'string?',
+  },
+};
+
+const IncidentEnergyResultValuesSchema: Realm.ObjectSchema = {
+  name: 'IncidentEnergyResultValues',
+  properties: {
+    i_energy: 'string?',
+    i_e14300: 'string?',
+    I_e2700: 'string?',
+    i_e600: 'string?',
+  },
+};
+
+const ArcFlashBoundaryResultValuesSchema: Realm.ObjectSchema = {
+  name: 'ArcFlashBoundaryResultValues',
+  properties: {
+    afb: 'string',
+    afb_14300: 'string',
+    iarc_2700: 'string?',
+    iarc_600: 'string?',
+  },
+};
+
+const PpeByLocationSchema: Realm.ObjectSchema = {
+  name: 'PpeByLocation',
+  properties: {
+    ppecategory: 'string?',
+    incidentenergyrange: 'string',
+    clothings: 'string',
+  },
+};
+
+const ArcCurrentResultSchema: Realm.ObjectSchema = {
+  name: 'ArcCurrentResult',
+  properties: {
+    intemidate_arccurrresultvalues: 'ArcCurrResultValues',
+    intemidate_incidentenergyresultvalues: 'IncidentEnergyResultValues',
+    intermidate_arcflashboundaryresultvalues: 'ArcFlashBoundaryResultValues',
+    arc_current: 'string',
+    ppecategorystd: 'string?',
+    arc_flashboundary: 'string',
+    arc_incidentenergy: 'string',
+    arc_time: 'string',
+    ppebylocation: 'PpeByLocation',
+  },
+};
+
+const ArcCalcResultSchema: Realm.ObjectSchema = {
+  name: 'ArcCalcResult',
+  properties: {
+    cf: 'float',
+    normal_arccurrentresult: 'ArcCurrentResult',
+    reduce_arccurrentresult: 'ArcCurrentResult',
+  },
+};
+
+const EquipmentDetailsSchema: Realm.ObjectSchema = {
+  name: 'EquipmentDetails',
+  properties: {
+    systemtype: 'string',
+    type: 'string',
+    systemratedvolt: 'float',
+    systemratedvolt_unit: 'string',
+    faultcurrent: 'float',
+    faultcurrent_unit: 'string',
+    faultclearingtime: 'float',
+    faultclearingtime_unit: 'string',
+    measurementtype: 'string',
+    workingdistance: 'float',
+    workingdistance_unit: 'string',
+    arcduration: 'float',
+    arcduration_unit: 'string',
+    enclosurewidth: 'float',
+    enclosurewidth_unit: 'string',
+    enclosureheight: 'float',
+    enclosureheight_unit: 'string',
+    enclosuredepth: 'float',
+    enclosuredepth_unit: 'string',
+    electrodeconfiguration: 'string',
+    electrodegap: 'float',
+    electrodegap_unit: 'string',
+    isratedlessthan200: 'bool?',
+  },
+};
+
+const EquipmentInfoSchema: Realm.ObjectSchema = {
+  name: 'EquipmentInfo',
+  properties: {
+    Id: 'string',
+    name: 'string',
+    description: 'string?',
+    location: 'string',
+    equipmentdetails: 'EquipmentDetails',
+  },
+};
+
+const ArcAnalysisSchema: Realm.ObjectSchema = {
+  name: 'ArcAnalysis',
+  primaryKey: 'id',
+  properties: {
+    id: 'string',
+    documentversion: 'string?',
+    organizationId: 'string',
+    locationId: 'string',
+    siteId: 'string?',
+    jobId: 'string',
+    arcopertiontype: 'string',
+    status: 'string',
+    startapptimestamp: 'int',
+    endapptimestamp: 'int',
+    createdby: 'string',
+    createdwhen: 'date',
+    modifiedby: 'string',
+    modifiedwhen: 'date',
+    equipmentinfo: 'EquipmentInfo',
+    ppecategoryresult: 'string?',
+    arccalcresult: 'ArcCalcResult',
+    isdeleted: 'bool',
+    message: 'string',
+    sasToken: 'string',
+  },
+};
+
+const migration = (oldRealm: Realm, newRealm: Realm) => {
+  const oldVersion = oldRealm.schemaVersion;
+  const newVersion = newRealm.schemaVersion;
+
+  if (oldVersion < 1) {
+    // Perform necessary migrations
+  }
+};
+
+const realmConfig: Realm.Configuration = {
+  schema: [
+    ArcCurrResultValuesSchema,
+    IncidentEnergyResultValuesSchema,
+    ArcFlashBoundaryResultValuesSchema,
+    PpeByLocationSchema,
+    ArcCurrentResultSchema,
+    ArcCalcResultSchema,
+    EquipmentDetailsSchema,
+    EquipmentInfoSchema,
+    ArcAnalysisSchema,
+  ],
+  schemaVersion: 1,
+  migration,
+};
+
+export default realmConfig;
+
+
+
+
+// saveData.ts
+import Realm from 'realm';
+import realmConfig from './realmConfig';
+import { ArcAnalysis } from './interfaces';
+
+const saveArcAnalysisData = async (data: ArcAnalysis[]) => {
+  const realm = await Realm.open(realmConfig);
+
+  realm.write(() => {
+    data.forEach(value => {
+      // Convert timestamp strings to Date objects
+      value.createdwhen = new Date(value.createdwhen);
+      value.modifiedwhen = new Date(value.modifiedwhen);
+
+      // Create or update the ArcAnalysis object
+      realm.create('ArcAnalysis
+
