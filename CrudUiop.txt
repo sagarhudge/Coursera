@@ -1,145 +1,503 @@
-// app.ts
+// interfaces.ts
+import Realm from 'realm';
+
+export interface ArcAnalysis extends Realm.Object {
+  id: string;
+  documentversion?: string | null;
+  organizationId: string;
+  locationId: string;
+  siteId?: string | null;
+  jobId?: string | null;
+  arcopertiontype: string;
+  status: string;
+  startapptimestamp: number;
+  endapptimestamp: number;
+  createdby: string;
+  createdwhen: Date;
+  modifiedby: string;
+  modifiedwhen: Date;
+  equipmentinfo: EquipmentInfo;
+  ppecategoryresult?: any;
+  arccalcresult: ArcCalcResult;
+  isdeleted: boolean;
+  message: string;
+  sasToken: string;
+}
+
+export interface EquipmentInfo extends Realm.Object {
+  Id: string;
+  name: string;
+  description?: string | null;
+  location: string;
+  equipmentdetails: EquipmentDetails;
+}
+
+export interface EquipmentDetails extends Realm.Object {
+  systemtype: string;
+  type: string;
+  systemratedvolt: number;
+  systemratedvolt_unit: string;
+  faultcurrent: number;
+  faultcurrent_unit: string;
+  faultclearingtime: number;
+  faultclearingtime_unit: string;
+  measurementtype: string;
+  workingdistance: number;
+  workingdistance_unit: string;
+  arcduration: number;
+  arcduration_unit: string;
+  enclosurewidth: number;
+  enclosurewidth_unit: string;
+  enclosureheight: number;
+  enclosureheight_unit: string;
+  enclosuredepth: number;
+  enclosuredepth_unit: string;
+  electrodeconfiguration: string;
+  electrodegap: number;
+  electrodegap_unit: string;
+  isratedlessthan200?: boolean | null;
+}
+
+export interface ArcCalcResult extends Realm.Object {
+  cf: number;
+  normal_arccurrentresult: ArcCurrentResult;
+  reduce_arccurrentresult: ArcCurrentResult;
+}
+
+export interface ArcCurrentResult extends Realm.Object {
+  intemidate_arccurrresultvalues: IntermediateArcCurrResultValues;
+  intemidate_incidentenergyresultvalues: IntermediateIncidentEnergyResultValues;
+  intermidate_arcflashboundaryresultvalues: IntermediateArcFlashBoundaryResultValues;
+  arc_current: string;
+  ppecategorystd?: any;
+  arc_flashboundary: string;
+  arc_incidentenergy: string;
+  arc_time: string;
+  ppebylocation: PpeByLocation;
+}
+
+export interface IntermediateArcCurrResultValues extends Realm.Object {
+  iarc: string;
+  iarc_14300: string;
+  iarc_2700: string;
+  iarc_600: string;
+  correctionfactor?: any;
+}
+
+export interface IntermediateIncidentEnergyResultValues extends Realm.Object {
+  i_energy?: any;
+  i_e14300?: any;
+  I_e2700?: any;
+  i_e600?: any;
+}
+
+export interface IntermediateArcFlashBoundaryResultValues extends Realm.Object {
+  afb: string;
+  afb_14300: string;
+  iarc_2700?: any;
+  iarc_600?: any;
+}
+
+export interface PpeByLocation extends Realm.Object {
+  ppecategory?: any;
+  incidentenergyrange: string;
+  clothings: string;
+}
+
+// Required by Realm
+export const ArcAnalysisSchema: Realm.ObjectSchema = {
+  name: 'ArcAnalysis',
+  primaryKey: 'id',
+  properties: {
+    id: 'string',
+    documentversion: 'string?',
+    organizationId: 'string',
+    locationId: 'string',
+    siteId: 'string?',
+    jobId: 'string?',
+    arcopertiontype: 'string',
+    status: 'string',
+    startapptimestamp: 'int',
+    endapptimestamp: 'int',
+    createdby: 'string',
+    createdwhen: 'date',
+    modifiedby: 'string',
+    modifiedwhen: 'date',
+    equipmentinfo: 'EquipmentInfo',
+    ppecategoryresult: 'mixed',
+    arccalcresult: 'ArcCalcResult',
+    isdeleted: 'bool',
+    message: 'string',
+    sasToken: 'string'
+  }
+};
+
+export const EquipmentInfoSchema: Realm.ObjectSchema = {
+  name: 'EquipmentInfo',
+  properties: {
+    Id: 'string',
+    name: 'string',
+    description: 'string?',
+    location: 'string',
+    equipmentdetails: 'EquipmentDetails'
+  }
+};
+
+export const EquipmentDetailsSchema: Realm.ObjectSchema = {
+  name: 'EquipmentDetails',
+  properties: {
+    systemtype: 'string',
+    type: 'string',
+    systemratedvolt: 'int',
+    systemratedvolt_unit: 'string',
+    faultcurrent: 'int',
+    faultcurrent_unit: 'string',
+    faultclearingtime: 'int',
+    faultclearingtime_unit: 'string',
+    measurementtype: 'string',
+    workingdistance: 'int',
+    workingdistance_unit: 'string',
+    arcduration: 'int',
+    arcduration_unit: 'string',
+    enclosurewidth: 'int',
+    enclosurewidth_unit: 'string',
+    enclosureheight: 'int',
+    enclosureheight_unit: 'string',
+    enclosuredepth: 'int',
+    enclosuredepth_unit: 'string',
+    electrodeconfiguration: 'string',
+    electrodegap: 'int',
+    electrodegap_unit: 'string',
+    isratedlessthan200: 'bool?'
+  }
+};
+
+export const ArcCalcResultSchema: Realm.ObjectSchema = {
+  name: 'ArcCalcResult',
+  properties: {
+    cf: 'int',
+    normal_arccurrentresult: 'ArcCurrentResult',
+    reduce_arccurrentresult: 'ArcCurrentResult'
+  }
+};
+
+export const ArcCurrentResultSchema: Realm.ObjectSchema = {
+  name: 'ArcCurrentResult',
+  properties: {
+    intemidate_arccurrresultvalues: 'IntermediateArcCurrResultValues',
+    intemidate_incidentenergyresultvalues: 'IntermediateIncidentEnergyResultValues',
+    intermidate_arcflashboundaryresultvalues: 'IntermediateArcFlashBoundaryResultValues',
+    arc_current: 'string',
+    ppecategorystd: 'mixed',
+    arc_flashboundary: 'string',
+    arc_incidentenergy: 'string',
+    arc_time: 'string',
+    ppebylocation: 'PpeByLocation'
+  }
+};
+
+export const IntermediateArcCurrResultValuesSchema: Realm.ObjectSchema = {
+  name: 'IntermediateArcCurrResultValues',
+  properties: {
+    iarc: 'string',
+    iarc_14300: 'string',
+    iarc_2700: 'string',
+    iarc_600: 'string',
+    correctionfactor: 'mixed'
+  }
+};
+
+export const IntermediateIncidentEnergyResultValuesSchema: Realm.ObjectSchema = {
+  name: 'IntermediateIncidentEnergyResultValues',
+  properties: {
+    i_energy: 'mixed',
+    i_e14300: 'mixed',
+    I_e2700: 'mixed',
+    i_e600: 'mixed'
+  }
+};
+
+export const IntermediateArcFlashBoundaryResultValuesSchema: Realm.ObjectSchema = {
+  name: 'IntermediateArcFlashBoundaryResultValues',
+  properties: {
+    afb: 'string',
+    afb_14300: 'string',
+    iarc_2700: 'mixed',
+    iarc_600: 'mixed'
+  }
+};
+
+export const PpeByLocationSchema: Realm.ObjectSchema = {
+  name: 'PpeByLocation',
+  properties: {
+    ppecategory: 'mixed',
+    incidentenergyrange: 'string',
+    clothings: 'string'
+  }
+};
+
+
+
+// realmConfig.ts
+import Realm from 'realm';
+import {
+  ArcAnalysisSchema,
+  EquipmentInfoSchema,
+  EquipmentDetailsSchema,
+  ArcCalcResultSchema,
+  ArcCurrentResultSchema,
+  IntermediateArcCurrResultValuesSchema,
+  IntermediateIncidentEnergyResultValuesSchema,
+  IntermediateArcFlashBoundaryResultValuesSchema,
+  PpeByLocationSchema
+} from './interfaces';
+
+const realmConfig: Realm.Configuration = {
+  schema: [
+    ArcAnalysisSchema,
+    EquipmentInfoSchema,
+    EquipmentDetailsSchema,
+    ArcCalcResultSchema,
+    ArcCurrentResultSchema,
+    IntermediateArcCurrResultValuesSchema,
+    IntermediateIncidentEnergyResultValuesSchema,
+    IntermediateArcFlashBoundaryResultValuesSchema,
+    PpeByLocationSchema
+  ],
+  schemaVersion: 1,
+  migration: (oldRealm, newRealm) => {
+    // Perform migration if needed
+  }
+};
+
+export default realmConfig;
+
+
+
+// RealmDatabase.ts
+import Realm from 'realm';
+import realmConfig from './realmConfig';
+import {
+  ArcAnalysis,
+  EquipmentInfo,
+  EquipmentDetails,
+  ArcCalcResult,
+  ArcCurrentResult,
+  IntermediateArcCurrResultValues,
+  IntermediateIncidentEnergyResultValues,
+  IntermediateArcFlashBoundaryResultValues,
+  PpeByLocation
+} from './interfaces';
+
+class RealmDatabase {
+  private static instance: RealmDatabase;
+  private realm: Realm;
+
+  private constructor() {
+    this.realm = new Realm(realmConfig);
+  }
+
+  public static getInstance(): RealmDatabase {
+    if (!RealmDatabase.instance) {
+      RealmDatabase.instance = new RealmDatabase();
+    }
+    return RealmDatabase.instance;
+  }
+
+  public createObject<T extends Realm.Object>(schemaName: string, data: Partial<T>): void {
+    this.realm.write(() => {
+      this.realm.create<T>(schemaName, data as T);
+    });
+  }
+
+  public getObject<T extends Realm.Object>(schemaName: string, primaryKey: string): T | undefined {
+    const result = this.realm.objectForPrimaryKey<T>(schemaName, primaryKey);
+    return result ? JSON.parse(JSON.stringify(result)) : undefined;
+  }
+
+  public getAllObjects<T extends Realm.Object>(schemaName: string): T[] {
+    return this.realm.objects<T>(schemaName).map(obj => JSON.parse(JSON.stringify(obj)));
+  }
+
+  public updateObject<T extends Realm.Object>(schemaName: string, primaryKey: string, data: Partial<T>): void {
+    this.realm.write(() => {
+      const obj = this.realm.objectForPrimaryKey<T>(schemaName, primaryKey);
+      if (obj) {
+        Object.assign(obj, data);
+      }
+    });
+  }
+
+  public deleteObject<T extends Realm.Object>(schemaName: string, primaryKey: string): void {
+    this.realm.write(() => {
+      const obj = this.realm.objectForPrimaryKey<T>(schemaName, primaryKey);
+      if (obj) {
+        this.realm.delete(obj);
+      }
+    });
+  }
+
+  public deleteAllObjects<T extends Realm.Object>(schemaName: string): void {
+    this.realm.write(() => {
+      const allObjects = this.realm.objects<T>(schemaName);
+      this.realm.delete(allObjects);
+    });
+  }
+
+  public close(): void {
+    if (!this.realm.isClosed) {
+      this.realm.close();
+    }
+  }
+}
+
+export default RealmDatabase;
+
+
+
+
+// app.tsx
+import React, { useEffect } from 'react';
 import RealmDatabase from './RealmDatabase';
 import { ArcAnalysis } from './interfaces';
 
-// Sample data
-const sampleArcAnalysis: ArcAnalysis = {
-  id: '226c7536-e39a-4d50-9dd6-140caadfd602',
-  documentversion: null,
-  organizationId: '381be7ac-5ec6-4b04-9c2b-bac2e89149f3',
-  locationId: '3b9719eb-d759-426b-a32c-d91ae1b11a72',
-  siteId: null,
-  jobId: 'Test1',
-  arcopertiontype: 'IEEE15842018',
-  status: 'Completed',
-  startapptimestamp: 1718030550596,
-  endapptimestamp: 1718030870619,
-  createdby: 'casey_uat_siteuser@esda.com',
-  createdwhen: new Date('2024-06-10T14:47:51.1316866+00:00'),
-  modifiedby: 'casey_uat_siteuser@esda.com',
-  modifiedwhen: new Date('2024-06-10T14:47:51.1316866+00:00'),
-  equipmentinfo: {
-    Id: 'Equip1',
-    name: 'Equip1',
-    description: null,
-    location: 'West',
-    equipmentdetails: {
-      systemtype: 'AC',
-      type: 'VClassSwitchGear',
-      systemratedvolt: 1500,
-      systemratedvolt_unit: 'volt',
-      faultcurrent: 20,
-      faultcurrent_unit: 'kA',
-      faultclearingtime: 0,
-      faultclearingtime_unit: 'ms',
-      measurementtype: 'Imperical',
-      workingdistance: 24,
-      workingdistance_unit: 'In',
-      arcduration: 0,
-      arcduration_unit: 'ms',
-      enclosurewidth: 1,
-      enclosurewidth_unit: 'In',
-      enclosureheight: 40,
-      enclosureheight_unit: 'In',
-      enclosuredepth: 19.7,
-      enclosuredepth_unit: 'In',
-      electrodeconfiguration: 'VCB',
-      electrodegap: 1.2,
-      electrodegap_unit: 'In',
-      isratedlessthan200: null,
-    },
-  },
-  ppecategoryresult: null,
-  arccalcresult: {
-    cf: 1.1929993483995172,
-    normal_arccurrentresult: {
-      intemidate_arccurrresultvalues: {
-        iarc: '17.0453523918773',
-        iarc_14300: '19.036764921903874',
-        iarc_2700: '17.490069391585607',
-        iarc_600: '16.338127498966102',
-        correctionfactor: null,
+const App = () => {
+  useEffect(() => {
+    const realmDb = RealmDatabase.getInstance();
+
+    // Example: Create an object
+    const newArcAnalysis: Partial<ArcAnalysis> = {
+      id: '1',
+      documentversion: '1.0',
+      organizationId: 'org123',
+      locationId: 'loc123',
+      arcopertiontype: 'type1',
+      status: 'active',
+      startapptimestamp: Date.now(),
+      endapptimestamp: Date.now(),
+      createdby: 'user1',
+      createdwhen: new Date(),
+      modifiedby: 'user1',
+      modifiedwhen: new Date(),
+      equipmentinfo: {
+        Id: 'equip1',
+        name: 'Equipment 1',
+        location: 'Location 1',
+        equipmentdetails: {
+          systemtype: 'type1',
+          type: 'type1',
+          systemratedvolt: 240,
+          systemratedvolt_unit: 'V',
+          faultcurrent: 10,
+          faultcurrent_unit: 'A',
+          faultclearingtime: 2,
+          faultclearingtime_unit: 's',
+          measurementtype: 'type1',
+          workingdistance: 1,
+          workingdistance_unit: 'm',
+          arcduration: 2,
+          arcduration_unit: 's',
+          enclosurewidth: 1,
+          enclosurewidth_unit: 'm',
+          enclosureheight: 2,
+          enclosureheight_unit: 'm',
+          enclosuredepth: 3,
+          enclosuredepth_unit: 'm',
+          electrodeconfiguration: 'config1',
+          electrodegap: 4,
+          electrodegap_unit: 'mm',
+          isratedlessthan200: true
+        }
       },
-      intemidate_incidentenergyresultvalues: {
-        i_energy: null,
-        i_e14300: null,
-        I_e2700: null,
-        i_e600: null,
+      arccalcresult: {
+        cf: 1,
+        normal_arccurrentresult: {
+          intemidate_arccurrresultvalues: {
+            iarc: '1',
+            iarc_14300: '1',
+            iarc_2700: '1',
+            iarc_600: '1'
+          },
+          intemidate_incidentenergyresultvalues: {
+            i_energy: 'energy',
+            i_e14300: 'energy',
+            I_e2700: 'energy',
+            i_e600: 'energy'
+          },
+          intermidate_arcflashboundaryresultvalues: {
+            afb: 'afb',
+            afb_14300: 'afb',
+            iarc_2700: 'afb',
+            iarc_600: 'afb'
+          },
+          arc_current: 'current',
+          arc_flashboundary: 'boundary',
+          arc_incidentenergy: 'energy',
+          arc_time: 'time',
+          ppebylocation: {
+            incidentenergyrange: 'range',
+            clothings: 'clothing'
+          }
+        },
+        reduce_arccurrentresult: {
+          intemidate_arccurrresultvalues: {
+            iarc: '1',
+            iarc_14300: '1',
+            iarc_2700: '1',
+            iarc_600: '1'
+          },
+          intemidate_incidentenergyresultvalues: {
+            i_energy: 'energy',
+            i_e14300: 'energy',
+            I_e2700: 'energy',
+            i_e600: 'energy'
+          },
+          intermidate_arcflashboundaryresultvalues: {
+            afb: 'afb',
+            afb_14300: 'afb',
+            iarc_2700: 'afb',
+            iarc_600: 'afb'
+          },
+          arc_current: 'current',
+          arc_flashboundary: 'boundary',
+          arc_incidentenergy: 'energy',
+          arc_time: 'time',
+          ppebylocation: {
+            incidentenergyrange: 'range',
+            clothings: 'clothing'
+          }
+        }
       },
-      intermidate_arcflashboundaryresultvalues: {
-        afb: '1072.4015355141123',
-        afb_14300: '1253.087189951422',
-        iarc_2700: null,
-        iarc_600: null,
-      },
-      arc_current: '17.0453523918773',
-      ppecategorystd: null,
-      arc_flashboundary: '1072.4015355141123',
-      arc_incidentenergy: 'null',
-      arc_time: 'null',
-      ppebylocation: {
-        ppecategory: null,
-        incidentenergyrange: 'null',
-        clothings: 'null',
-      },
-    },
-    reduce_arccurrentresult: {
-      intemidate_arccurrresultvalues: {
-        iarc: '17.0453523918773',
-        iarc_14300: '19.036764921903874',
-        iarc_2700: '17.490069391585607',
-        iarc_600: '16.338127498966102',
-        correctionfactor: null,
-      },
-      intemidate_incidentenergyresultvalues: {
-        i_energy: null,
-        i_e14300: null,
-        I_e2700: null,
-        i_e600: null,
-      },
-      intermidate_arcflashboundaryresultvalues: {
-        afb: '1072.4015355141123',
-        afb_14300: '1253.087189951422',
-        iarc_2700: null,
-        iarc_600: null,
-      },
-      arc_current: '17.0453523918773',
-      ppecategorystd: null,
-      arc_flashboundary: '1072.4015355141123',
-      arc_incidentenergy: 'null',
-      arc_time: 'null',
-      ppebylocation: {
-        ppecategory: null,
-        incidentenergyrange: 'null',
-        clothings: 'null',
-      },
-    },
-  },
-  isdeleted: false,
-  message: 'Arc Analysis result data retrieved successfully.',
-  sasToken: 'sasTokenValue',
+      isdeleted: false,
+      message: 'message',
+      sasToken: 'token'
+    };
+
+    realmDb.createObject<ArcAnalysis>('ArcAnalysis', newArcAnalysis);
+
+    // Example: Get an object
+    const arcAnalysis = realmDb.getObject<ArcAnalysis>('ArcAnalysis', '1');
+    console.log('Fetched ArcAnalysis:', arcAnalysis);
+
+    // Example: Update an object
+    realmDb.updateObject<ArcAnalysis>('ArcAnalysis', '1', { status: 'completed' });
+
+    // Example: Delete an object
+    realmDb.deleteObject<ArcAnalysis>('ArcAnalysis', '1');
+
+    // Clean up
+    return () => {
+      realmDb.close();
+    };
+  }, []);
+
+  return (
+    <div>
+      <h1>Realm Database Example</h1>
+    </div>
+  );
 };
 
-const db = RealmDatabase.getInstance();
+export default App;
 
-// Create an ArcAnalysis object
-db.createObject<ArcAnalysis>('ArcAnalysis', sampleArcAnalysis);
-console.log('ArcAnalysis created');
 
-// Read the ArcAnalysis object by primary key
-const arcAnalysis = db.getObject<ArcAnalysis>('ArcAnalysis', '226c7536-e39a-4d50-9dd6-140caadfd602');
-console.log('Read ArcAnalysis:', arcAnalysis);
-
-// Update the ArcAnalysis object
-if (arcAnalysis) {
-  arcAnalysis.message = 'Updated message';
-  db.updateObject<ArcAnalysis>('ArcAnalysis', arcAnalysis);
-  console.log('ArcAnalysis updated');
-}
-
-// Delete the ArcAnalysis object
-db.deleteObject('ArcAnalysis', '226c7536-e39a-4d50-9dd6-140caadfd602');
-console.log('ArcAnalysis deleted');
-
-// Close the Realm instance when done
-db.close();
