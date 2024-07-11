@@ -1,0 +1,116 @@
+  {
+        "id": "226c7536-e39a-4d50-9dd6-140caadfd602",
+        "documentversion": null,
+        "organizationId": "381be7ac-5ec6-4b04-9c2b-bac2e89149f3",
+        "locationId": "3b9719eb-d759-426b-a32c-d91ae1b11a72",
+        "siteId": null,
+        "jobId": "Test1",
+        "arcopertiontype": "IEEE15842018",
+        "status": "Completed",
+        "startapptimestamp": 1718030550596,
+        "endapptimestamp": 1718030870619,
+        "createdby": "casey_uat_siteuser@esda.com",
+        "createdwhen": "2024-06-10T14:47:51.1316866+00:00",
+        "modifiedby": "casey_uat_siteuser@esda.com",
+        "modifiedwhen": "2024-06-10T14:47:51.1316866+00:00",
+        "equipmentinfo": {
+          "Id": "Equip1",
+          "name": "Equip1",
+          "description": null,
+          "location": "West",
+          "equipmentdetails": {
+            "systemtype": "AC",
+            "type": "VClassSwitchGear",
+            "systemratedvolt": 1500.0,
+            "systemratedvolt_unit": "volt",
+            "faultcurrent": 20.0,
+            "faultcurrent_unit": "kA",
+            "faultclearingtime": 0.0,
+            "faultclearingtime_unit": "ms",
+            "measurementtype": "Imperical",
+            "workingdistance": 24.0,
+            "workingdistance_unit": "In",
+            "arcduration": 0.0,
+            "arcduration_unit": "ms",
+            "enclosurewidth": 1.0,
+            "enclosurewidth_unit": "In",
+            "enclosureheight": 40.0,
+            "enclosureheight_unit": "In",
+            "enclosuredepth": 19.7,
+            "enclosuredepth_unit": "In",
+            "electrodeconfiguration": "VCB",
+            "electrodegap": 1.2,
+            "electrodegap_unit": "In",
+            "isratedlessthan200": null
+          }
+        },
+        "ppecategoryresult": null,
+        "arccalcresult": {
+          "cf": 1.1929993483995172,
+          "normal_arccurrentresult": {
+            "intemidate_arccurrresultvalues": {
+              "iarc": "17.0453523918773",
+              "iarc_14300": "19.036764921903874",
+              "iarc_2700": "17.490069391585607",
+              "iarc_600": "16.338127498966102",
+              "correctionfactor": null
+            },
+            "intemidate_incidentenergyresultvalues": {
+              "i_energy": null,
+              "i_e14300": null,
+              "I_e2700": null,
+              "i_e600": null
+            },
+            "intermidate_arcflashboundaryresultvalues": {
+              "afb": "1072.4015355141123",
+              "afb_14300": "1253.0871899514223",
+              "iarc_2700": null,
+              "iarc_600": null
+            },
+            "arc_current": "17.0453523918773 kA",
+            "ppecategorystd": null,
+            "arc_flashboundary": "1.0724015355141123 m",
+            "arc_incidentenergy": "2.9392465622881434 Cal/cm2",
+            "arc_time": "100 ms",
+            "ppebylocation": {
+              "ppecategory": "",
+              "incidentenergyrange": "{\"minIncidentEnergyValue\":1.2,\"maxIncidentEnergyValue\":12,\"rangeUnit\":\"Cal/cm2\"}",
+              "clothings": "[{\"ieeeClothingTypeId\":\"Long_sleeve_shirt_and_pants_or_coverall_or_arc_flash_suit_SR\",\"name\":\"Long Sleeve Shirt And Pants Or Coverall Or Arc Flash Suit (SR)\",\"description\":\"Long-sleeve shirt and pants or coverall or arcflashsuit(SR)\",\"images\":[{\"name\":\"Arc-Rated Long Sleeve Shirt And Pants\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/long sleeves shirt and pants/Arc rated long sleeve shirt and pants.jpg\",\"isChecked\":0},{\"name\":\"Long Sleeve And Pants\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/long sleeves shirt and pants/long sleeve and pants.jfif\",\"isChecked\":0},{\"name\":\"Arc-Rated Coverall\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Suite/arc rated coverall.jpg\",\"isChecked\":0},{\"name\":\"Arc-Rated Arc Flash Suit Jacket\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Suite/Arc rated arc flash suit jacket .jpg\",\"isChecked\":0},{\"name\":\"Arc-Rated Arc Flash Suit Pants\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Suite/Arc rated arc flash suit pants.jpg\",\"isChecked\":0}],\"requiredOption\":0},{\"ieeeClothingTypeId\":\"Arc_rated_face_shield_and_arc_rated_balaclava_or_arc_flash_suit_hood_SRb\",\"name\":\"Arc-Rated Face Shield And Arc-Rated Balaclava Or Arc Flash Suit Hood (SR)b\",\"description\":\"Arc-ratedfaceshieldandarc-ratedbalaclavaorarcflashsuithood(SR)b\",\"images\":[{\"name\":\"Face Shield\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Hat/Hard Hat with Shield.png\",\"isChecked\":0},{\"name\":\"Flash Suit Hood\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Helmet/Grey.png\",\"isChecked\":0},{\"name\":\"Balaclava\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Helmet/Balaclava.jpg\",\"isChecked\":0}],\"requiredOption\":0},{\"ieeeClothingTypeId\":\"Arc_rated_outerwear_jacket_parka_rainwear_hard_hat_liner_AN\",\"name\":\"Arc-Rated Outer Wear(e.g.Jacket,Parka,Rainwear,Hard Hat Liner)(AN)\",\"description\":\"Arc-ratedouterwear(e.g.,jacket,parka,rainwear,hardhatliner)(AN)\",\"images\":[{\"name\":\"Arc-Rated Arc Flash Suit Jacket\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Suite/Arc rated arc flash suit jacket .jpg\",\"isChecked\":0},{\"name\":\"Hard Hat Liner\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Hat/Hat Liner.jpg\",\"isChecked\":0}],\"requiredOption\":0},{\"ieeeClothingTypeId\":\"Heavy_duty_leather_gloves_arc_rated_gloves_or_rubber_insulating_gloves_with_leather_protectors_SRc\",\"name\":\"Heavy Duty Leather Gloves, Arc-Rated Gloves,Or Rubber Insulating Gloves With Leather Protectors (SR)c\",\"description\":\"Heavy-dutyleathergloves,arc-ratedgloves,orrubberinsulatinggloveswithleatherprotectors(SR)c\",\"images\":[{\"name\":\"Leather Gloves\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Gloves/leather gloves.jpg\",\"isChecked\":0},{\"name\":\"Arc-Rated Gloves\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Gloves/Arc rated gloves.jpg\",\"isChecked\":0}],\"requiredOption\":0},{\"ieeeClothingTypeId\":\"Hard_hat\",\"name\":\"Hard Hat\",\"description\":\"Hardhat\",\"images\":[{\"name\":\"Hard Hat\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Hat/Hard Hat.png\",\"isChecked\":0}],\"requiredOption\":0},{\"ieeeClothingTypeId\":\"Safety_glasses_or_safety_goggles_SR\",\"name\":\"Safety Glasses Or Safety Goggles (SR)\",\"description\":\"SafetyGlassesorsafetygogglesSR\",\"images\":[{\"name\":\"Safety Glasses\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Safety Glasses/Safety Glasses.png\",\"isChecked\":0},{\"name\":\"Safety Goggle\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Safety Glasses/safety_goggle.jfif\",\"isChecked\":0}],\"requiredOption\":0},{\"ieeeClothingTypeId\":\"Hearing_protection\",\"name\":\"Hearing Protection\",\"description\":\"Hearingprotection\",\"images\":[{\"name\":\"Ear Plugs\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Ear Protection/Earplugs.png\",\"isChecked\":0}],\"requiredOption\":0},{\"ieeeClothingTypeId\":\"Leather_footwear\",\"name\":\"Leather Footwear\",\"description\":\"LeatherFootwear\",\"images\":[{\"name\":\"Leather Footwear\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Shoes/Boot.png\",\"isChecked\":0}],\"requiredOption\":0}]"
+            }
+          },
+          "reduce_arccurrentresult": {
+            "intemidate_arccurrresultvalues": {
+              "iarc": "15.709191758577916",
+              "iarc_14300": "17.544500327471443",
+              "iarc_2700": "16.11904803295135",
+              "iarc_600": "15.057405206809348",
+              "correctionfactor": "0.9216114397296875"
+            },
+            "intemidate_incidentenergyresultvalues": {
+              "i_energy": null,
+              "i_e14300": null,
+              "I_e2700": null,
+              "i_e600": null
+            },
+            "intermidate_arcflashboundaryresultvalues": {
+              "afb": "1467.2223915938812",
+              "afb_14300": "2082.601237002338",
+              "iarc_2700": null,
+              "iarc_600": null
+            },
+            "arc_current": "15.709191758577916 kA",
+            "ppecategorystd": null,
+            "arc_flashboundary": "1.4672223915938811 m",
+            "arc_incidentenergy": "4.833254446908065 Cal/cm2",
+            "arc_time": "200 ms",
+            "ppebylocation": {
+              "ppecategory": "",
+              "incidentenergyrange": "{\"minIncidentEnergyValue\":1.2,\"maxIncidentEnergyValue\":12,\"rangeUnit\":\"Cal/cm2\"}",
+              "clothings": "[{\"ieeeClothingTypeId\":\"Long_sleeve_shirt_and_pants_or_coverall_or_arc_flash_suit_SR\",\"name\":\"Long Sleeve Shirt And Pants Or Coverall Or Arc Flash Suit (SR)\",\"description\":\"Long-sleeve shirt and pants or coverall or arcflashsuit(SR)\",\"images\":[{\"name\":\"Arc-Rated Long Sleeve Shirt And Pants\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/long sleeves shirt and pants/Arc rated long sleeve shirt and pants.jpg\",\"isChecked\":0},{\"name\":\"Long Sleeve And Pants\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/long sleeves shirt and pants/long sleeve and pants.jfif\",\"isChecked\":0},{\"name\":\"Arc-Rated Coverall\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Suite/arc rated coverall.jpg\",\"isChecked\":0},{\"name\":\"Arc-Rated Arc Flash Suit Jacket\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Suite/Arc rated arc flash suit jacket .jpg\",\"isChecked\":0},{\"name\":\"Arc-Rated Arc Flash Suit Pants\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Suite/Arc rated arc flash suit pants.jpg\",\"isChecked\":0}],\"requiredOption\":0},{\"ieeeClothingTypeId\":\"Arc_rated_face_shield_and_arc_rated_balaclava_or_arc_flash_suit_hood_SRb\",\"name\":\"Arc-Rated Face Shield And Arc-Rated Balaclava Or Arc Flash Suit Hood (SR)b\",\"description\":\"Arc-ratedfaceshieldandarc-ratedbalaclavaorarcflashsuithood(SR)b\",\"images\":[{\"name\":\"Face Shield\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Hat/Hard Hat with Shield.png\",\"isChecked\":0},{\"name\":\"Flash Suit Hood\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Helmet/Grey.png\",\"isChecked\":0},{\"name\":\"Balaclava\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Helmet/Balaclava.jpg\",\"isChecked\":0}],\"requiredOption\":0},{\"ieeeClothingTypeId\":\"Arc_rated_outerwear_jacket_parka_rainwear_hard_hat_liner_AN\",\"name\":\"Arc-Rated Outer Wear(e.g.Jacket,Parka,Rainwear,Hard Hat Liner)(AN)\",\"description\":\"Arc-ratedouterwear(e.g.,jacket,parka,rainwear,hardhatliner)(AN)\",\"images\":[{\"name\":\"Arc-Rated Arc Flash Suit Jacket\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Suite/Arc rated arc flash suit jacket .jpg\",\"isChecked\":0},{\"name\":\"Hard Hat Liner\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Hat/Hat Liner.jpg\",\"isChecked\":0}],\"requiredOption\":0},{\"ieeeClothingTypeId\":\"Heavy_duty_leather_gloves_arc_rated_gloves_or_rubber_insulating_gloves_with_leather_protectors_SRc\",\"name\":\"Heavy Duty Leather Gloves, Arc-Rated Gloves,Or Rubber Insulating Gloves With Leather Protectors (SR)c\",\"description\":\"Heavy-dutyleathergloves,arc-ratedgloves,orrubberinsulatinggloveswithleatherprotectors(SR)c\",\"images\":[{\"name\":\"Leather Gloves\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Gloves/leather gloves.jpg\",\"isChecked\":0},{\"name\":\"Arc-Rated Gloves\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Gloves/Arc rated gloves.jpg\",\"isChecked\":0}],\"requiredOption\":0},{\"ieeeClothingTypeId\":\"Hard_hat\",\"name\":\"Hard Hat\",\"description\":\"Hardhat\",\"images\":[{\"name\":\"Hard Hat\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Hat/Hard Hat.png\",\"isChecked\":0}],\"requiredOption\":0},{\"ieeeClothingTypeId\":\"Safety_glasses_or_safety_goggles_SR\",\"name\":\"Safety Glasses Or Safety Goggles (SR)\",\"description\":\"SafetyGlassesorsafetygogglesSR\",\"images\":[{\"name\":\"Safety Glasses\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Safety Glasses/Safety Glasses.png\",\"isChecked\":0},{\"name\":\"Safety Goggle\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Safety Glasses/safety_goggle.jfif\",\"isChecked\":0}],\"requiredOption\":0},{\"ieeeClothingTypeId\":\"Hearing_protection\",\"name\":\"Hearing Protection\",\"description\":\"Hearingprotection\",\"images\":[{\"name\":\"Ear Plugs\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Ear Protection/Earplugs.png\",\"isChecked\":0}],\"requiredOption\":0},{\"ieeeClothingTypeId\":\"Leather_footwear\",\"name\":\"Leather Footwear\",\"description\":\"LeatherFootwear\",\"images\":[{\"name\":\"Leather Footwear\",\"imageUrlString\":\"https://esdaafxstrgarcanalyuat.blob.core.windows.net/ppeequipments/Shoes/Boot.png\",\"isChecked\":0}],\"requiredOption\":0}]"
+            }
+          }
+        },
+        "isdeleted": false,
+        "message": "IEEE1584-2018 - Arc In completed.",
+        "sasToken": "sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2025-12-30T21:53:28Z&st=2024-04-25T13:53:28Z&spr=https&sig=Iwmu32NIkgTzMjlbBfyEf6UwnNJUhNZPEByekYQ4TbU%3D"
+      }
