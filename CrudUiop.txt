@@ -1,0 +1,145 @@
+// app.ts
+import RealmDatabase from './RealmDatabase';
+import { ArcAnalysis } from './interfaces';
+
+// Sample data
+const sampleArcAnalysis: ArcAnalysis = {
+  id: '226c7536-e39a-4d50-9dd6-140caadfd602',
+  documentversion: null,
+  organizationId: '381be7ac-5ec6-4b04-9c2b-bac2e89149f3',
+  locationId: '3b9719eb-d759-426b-a32c-d91ae1b11a72',
+  siteId: null,
+  jobId: 'Test1',
+  arcopertiontype: 'IEEE15842018',
+  status: 'Completed',
+  startapptimestamp: 1718030550596,
+  endapptimestamp: 1718030870619,
+  createdby: 'casey_uat_siteuser@esda.com',
+  createdwhen: new Date('2024-06-10T14:47:51.1316866+00:00'),
+  modifiedby: 'casey_uat_siteuser@esda.com',
+  modifiedwhen: new Date('2024-06-10T14:47:51.1316866+00:00'),
+  equipmentinfo: {
+    Id: 'Equip1',
+    name: 'Equip1',
+    description: null,
+    location: 'West',
+    equipmentdetails: {
+      systemtype: 'AC',
+      type: 'VClassSwitchGear',
+      systemratedvolt: 1500,
+      systemratedvolt_unit: 'volt',
+      faultcurrent: 20,
+      faultcurrent_unit: 'kA',
+      faultclearingtime: 0,
+      faultclearingtime_unit: 'ms',
+      measurementtype: 'Imperical',
+      workingdistance: 24,
+      workingdistance_unit: 'In',
+      arcduration: 0,
+      arcduration_unit: 'ms',
+      enclosurewidth: 1,
+      enclosurewidth_unit: 'In',
+      enclosureheight: 40,
+      enclosureheight_unit: 'In',
+      enclosuredepth: 19.7,
+      enclosuredepth_unit: 'In',
+      electrodeconfiguration: 'VCB',
+      electrodegap: 1.2,
+      electrodegap_unit: 'In',
+      isratedlessthan200: null,
+    },
+  },
+  ppecategoryresult: null,
+  arccalcresult: {
+    cf: 1.1929993483995172,
+    normal_arccurrentresult: {
+      intemidate_arccurrresultvalues: {
+        iarc: '17.0453523918773',
+        iarc_14300: '19.036764921903874',
+        iarc_2700: '17.490069391585607',
+        iarc_600: '16.338127498966102',
+        correctionfactor: null,
+      },
+      intemidate_incidentenergyresultvalues: {
+        i_energy: null,
+        i_e14300: null,
+        I_e2700: null,
+        i_e600: null,
+      },
+      intermidate_arcflashboundaryresultvalues: {
+        afb: '1072.4015355141123',
+        afb_14300: '1253.087189951422',
+        iarc_2700: null,
+        iarc_600: null,
+      },
+      arc_current: '17.0453523918773',
+      ppecategorystd: null,
+      arc_flashboundary: '1072.4015355141123',
+      arc_incidentenergy: 'null',
+      arc_time: 'null',
+      ppebylocation: {
+        ppecategory: null,
+        incidentenergyrange: 'null',
+        clothings: 'null',
+      },
+    },
+    reduce_arccurrentresult: {
+      intemidate_arccurrresultvalues: {
+        iarc: '17.0453523918773',
+        iarc_14300: '19.036764921903874',
+        iarc_2700: '17.490069391585607',
+        iarc_600: '16.338127498966102',
+        correctionfactor: null,
+      },
+      intemidate_incidentenergyresultvalues: {
+        i_energy: null,
+        i_e14300: null,
+        I_e2700: null,
+        i_e600: null,
+      },
+      intermidate_arcflashboundaryresultvalues: {
+        afb: '1072.4015355141123',
+        afb_14300: '1253.087189951422',
+        iarc_2700: null,
+        iarc_600: null,
+      },
+      arc_current: '17.0453523918773',
+      ppecategorystd: null,
+      arc_flashboundary: '1072.4015355141123',
+      arc_incidentenergy: 'null',
+      arc_time: 'null',
+      ppebylocation: {
+        ppecategory: null,
+        incidentenergyrange: 'null',
+        clothings: 'null',
+      },
+    },
+  },
+  isdeleted: false,
+  message: 'Arc Analysis result data retrieved successfully.',
+  sasToken: 'sasTokenValue',
+};
+
+const db = RealmDatabase.getInstance();
+
+// Create an ArcAnalysis object
+db.createObject<ArcAnalysis>('ArcAnalysis', sampleArcAnalysis);
+console.log('ArcAnalysis created');
+
+// Read the ArcAnalysis object by primary key
+const arcAnalysis = db.getObject<ArcAnalysis>('ArcAnalysis', '226c7536-e39a-4d50-9dd6-140caadfd602');
+console.log('Read ArcAnalysis:', arcAnalysis);
+
+// Update the ArcAnalysis object
+if (arcAnalysis) {
+  arcAnalysis.message = 'Updated message';
+  db.updateObject<ArcAnalysis>('ArcAnalysis', arcAnalysis);
+  console.log('ArcAnalysis updated');
+}
+
+// Delete the ArcAnalysis object
+db.deleteObject('ArcAnalysis', '226c7536-e39a-4d50-9dd6-140caadfd602');
+console.log('ArcAnalysis deleted');
+
+// Close the Realm instance when done
+db.close();
