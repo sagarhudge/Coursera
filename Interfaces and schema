@@ -1,0 +1,255 @@
+interface EquipmentDetails {
+  faultclearingtime: number;
+  faultclearingtime_unit: string;
+  arcduration: number;
+  arcduration_unit: string;
+  systemtype: string;
+  type: string;
+  systemratedvolt: number;
+  systemratedvolt_unit: string;
+  faultcurrent: number;
+  faultcurrent_unit: string;
+  workingdistance: number;
+  workingdistance_unit: string;
+  enclosurewidth: number;
+  enclosurewidth_unit: string;
+  enclosureheight: number;
+  enclosureheight_unit: string;
+  enclosuredepth: number;
+  enclosuredepth_unit: string;
+  electrodeconfiguration: string;
+  electrodegap: number;
+  electrodegap_unit: string;
+  measurementtype: string;
+}
+
+interface EquipmentInfo {
+  id: string;
+  name: string;
+  location: string;
+  equipmentdetails: EquipmentDetails;
+}
+
+interface IntermediateArcCurrentResultValues {
+  iarc_600: string;
+  iarc_2700: string;
+  iarc_14300: string;
+  iarc: string;
+  correctionfactor?: string;
+}
+
+interface IntermediateIncidentEnergyResultValues {
+  e_600: string;
+  e_2700: string;
+  e_14300: string;
+  e: string;
+}
+
+interface IntermediateArcFlashBoundaryResultValues {
+  afb_600: string;
+  afb_2700: string;
+  afb_14300: string;
+  afb: string;
+}
+
+interface Image {
+  name: string;
+  imageUrlString: string;
+  isChecked: number;
+}
+
+interface Clothing {
+  ieeeClothingTypeId: string;
+  name: string;
+  description: string;
+  images: Image[];
+  requiredOption: number;
+}
+
+interface PPEByLocation {
+  ppecategory: string;
+  incidentenergyrange: string;
+  clothings: Clothing[];
+}
+
+interface NormalArcCurrentResult {
+  arc_current: string;
+  arc_flashboundary: string;
+  arc_incidentenergy: string;
+  arc_time: string;
+  intemidate_arccurrresultvalues: IntermediateArcCurrentResultValues;
+  intemidate_incidentenergyresultvalues: IntermediateIncidentEnergyResultValues;
+  intermidate_arcflashboundaryresultvalues: IntermediateArcFlashBoundaryResultValues;
+  ppebylocation: PPEByLocation;
+}
+
+interface ReducedArcCurrentResult {
+  arc_current: string;
+  arc_flashboundary: string;
+  arc_incidentenergy: string;
+  arc_time: string;
+  intemidate_arccurrresultvalues: IntermediateArcCurrentResultValues;
+  intemidate_incidentenergyresultvalues: IntermediateIncidentEnergyResultValues;
+  intermidate_arcflashboundaryresultvalues: IntermediateArcFlashBoundaryResultValues;
+  ppebylocation: PPEByLocation;
+}
+
+interface ArcCalcResult {
+  cf: number;
+  normal_arccurrentresult: NormalArcCurrentResult;
+  reduce_arccurrentresult: ReducedArcCurrentResult;
+}
+
+interface Data {
+  id: string;
+  jobId: string;
+  arcopertiontype: string;
+  status: string;
+  startapptimestamp: number;
+  endapptimestamp: number;
+  equipmentinfo: EquipmentInfo;
+  arccalcresult: ArcCalcResult
+}
+
+
+///////
+
+
+
+const JobSchema = {
+  name: 'Job',
+  primaryKey: 'id',
+  properties: {
+    id: 'string',
+    jobId: 'string',
+    arcopertiontype: 'string',
+    status: 'string',
+    startapptimestamp: 'int',
+    endapptimestamp: 'int',
+    equipmentinfo: 'EquipmentInfo',
+    arccalcresult: 'ArcCalcResult',
+  },
+};
+
+const EquipmentInfoSchema = {
+  name: 'EquipmentInfo',
+  properties: {
+    id: 'string',
+    name: 'string',
+    location: 'string',
+    equipmentdetails: 'EquipmentDetails',
+  },
+};
+
+const EquipmentDetailsSchema = {
+  name: 'EquipmentDetails',
+  properties: {
+    faultclearingtime: 'int',
+    faultclearingtime_unit: 'string',
+    arcduration: 'int',
+    arcduration_unit: 'string',
+    systemtype: 'string',
+    type: 'string',
+    systemratedvolt: 'int',
+    systemratedvolt_unit: 'string',
+    faultcurrent: 'int',
+    faultcurrent_unit: 'string',
+    workingdistance: 'int',
+    workingdistance_unit: 'string',
+    enclosurewidth: 'int',
+    enclosurewidth_unit: 'string',
+    enclosureheight: 'int',
+    enclosureheight_unit: 'string',
+    enclosuredepth: 'int',
+    enclosuredepth_unit: 'string',
+    electrodeconfiguration: 'string',
+    electrodegap: 'int',
+    electrodegap_unit: 'string',
+    measurementtype: 'string',
+  },
+};
+
+const ArcCalcResultSchema = {
+  name: 'ArcCalcResult',
+  properties: {
+    cf: 'float',
+    normal_arccurrentresult: 'ArcCurrentResult',
+    reduce_arccurrentresult: 'ArcCurrentResult',
+  },
+};
+
+const ArcCurrentResultSchema = {
+  name: 'ArcCurrentResult',
+  properties: {
+    arc_current: 'string',
+    arc_flashboundary: 'string',
+    arc_incidentenergy: 'string',
+    arc_time: 'string',
+    intemidate_arccurrresultvalues: 'IntermediateArcCurrentResultValues',
+    intemidate_incidentenergyresultvalues: 'IntermediateIncidentEnergyResultValues',
+    intermidate_arcflashboundaryresultvalues: 'IntermediateArcFlashBoundaryResultValues',
+    ppebylocation: 'PpeByLocation',
+  },
+};
+
+const IntermediateArcCurrentResultValuesSchema = {
+  name: 'IntermediateArcCurrentResultValues',
+  properties: {
+    iarc_600: 'string',
+    iarc_2700: 'string',
+    iarc_14300: 'string',
+    iarc: 'string',
+    correctionfactor: 'string?',
+  },
+};
+
+const IntermediateIncidentEnergyResultValuesSchema = {
+  name: 'IntermediateIncidentEnergyResultValues',
+  properties: {
+    e_600: 'string',
+    e_2700: 'string?',
+    e_14300: 'string?',
+    e: 'string',
+  },
+};
+
+const IntermediateArcFlashBoundaryResultValuesSchema = {
+  name: 'IntermediateArcFlashBoundaryResultValues',
+  properties: {
+    afb_600: 'string',
+    afb_2700: 'string?',
+    afb_14300: 'string?',
+    afb: 'string',
+  },
+};
+
+const PpeByLocationSchema = {
+  name: 'PpeByLocation',
+  properties: {
+    ppecategory: 'string',
+    incidentenergyrange: 'string',
+    clothings: 'Clothing[]',
+  },
+};
+
+const ClothingSchema = {
+  name: 'Clothing',
+  properties: {
+    ieeeClothingTypeId: 'string',
+    name: 'string',
+    description: 'string',
+    images: 'Image[]',
+    requiredOption: 'int',
+  },
+};
+
+const ImageSchema = {
+  name: 'Image',
+  properties: {
+    name: 'string',
+    imageUrlString: 'string',
+    isChecked: 'int',
+  },
+};
+
+
